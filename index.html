@@ -197,6 +197,7 @@ body.phone-open .feed{z-index:30}
 .crewneed{display:flex;flex-wrap:wrap;gap:4px;margin:6px 0}.crewneed span{padding:3px 7px;border-radius:8px;background:#efe6d2;font-size:11px;color:#5b6a5f}.crewneed b{color:#36463d}
 /* language switch (save menu) */
 .langrow{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:12px;padding:9px 10px;border-radius:12px;background:#efe6d2;font-weight:700;color:#4f5a52;font-size:12px}.langrow .seg{flex:none}.langrow button.on{background:#4d715c;color:#fff}
+.right-controls #langBtn{font-size:12px;font-weight:900;letter-spacing:.5px;color:#fff;background:#4d715c;border-color:#4d715c}.right-controls #langBtn:hover{background:#3e5e4c}
 </style></head><body>
 <canvas id="world" aria-label="Bản đồ thành phố isometric, kéo để di chuyển, dùng thanh công cụ bên dưới để xây"></canvas><div id="shade"></div>
 <div class="topbar"><div class="brand"><div class="seal">♜</div><div><strong>OLD & NEW</strong><small>THÀNH PHỐ CỦA BẠN</small></div></div><div class="metric money"><span id="lMoney">NGÂN SÁCH</span><b id="money">$ 48,000</b></div><div class="metric"><span id="lPop">DÂN SỐ</span><b id="population">—</b></div><div class="metric" id="mHappy"><span>HẠNH PHÚC</span><b id="happiness">—</b></div><div class="metric"><span>NGÀY</span><b id="day">01</b></div><div class="metric clockm"><span>GIỜ</span><b id="clockTxt">☀ 06:00</b></div><button class="tiny-btn" id="tbMap" title="Bản đồ giá đất / dòng khách" aria-label="Bản đồ giá đất" hidden>🗺</button><button class="tiny-btn" id="tbPhone" title="Điện thoại" aria-label="Mở điện thoại" hidden>📱</button><button class="tiny-btn" id="pause" title="Tạm dừng thời gian">Ⅱ</button><button class="tiny-btn" id="save" title="Lưu thành phố">↧ Lưu</button><button class="tiny-btn" id="new" title="Tạo lại thành phố">↺</button></div>
@@ -243,6 +244,9 @@ if(LANG==='en'){
 }
 // switching language reloads the page; the exit save keeps the game exactly where it was
 document.addEventListener('click',e=>{const b=e.target.closest?.('[data-lang]');if(!b||b.dataset.lang===LANG)return;try{localStorage.setItem('belleville-lang',b.dataset.lang)}catch(x){}location.reload()});
+// a language button at the top of the right-hand controls, always in sight: shows the language it switches to
+{const rc=document.querySelector('.right-controls');if(rc){const b=document.createElement('button');b.id='langBtn';b.dataset.lang=LANG==='en'?'vi':'en';
+ b.textContent=LANG==='en'?'VI':'EN';b.title=LANG==='en'?'Chuyển sang Tiếng Việt':'Switch to English';b.setAttribute('aria-label',b.title);rc.prepend(b)}}
 const langRow=()=>`<div class="langrow"><span>🌐 Ngôn ngữ / Language</span><div class="seg"><button data-lang="vi" class="${LANG==='vi'?'on':''}">Tiếng Việt</button><button data-lang="en" class="${LANG==='en'?'on':''}">English</button></div></div>`;
 (()=>{'use strict';
 const visual={quality:'high',atmosphere:true,motion:!matchMedia('(prefers-reduced-motion: reduce)').matches};
