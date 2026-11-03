@@ -2202,10 +2202,13 @@ HOOK.panel.proj=()=>{const p=career.proj,b=p.id&&bOf(p.id),st=(ok,t)=>`<p class=
 
 // --- 6a. quản gia: tự lo ăn, ngủ, tắm, giải trí khi bạn khá giả
 const BUTLER_FEE=60;
-function butlerTick(){const c=career;if(!c?.butler?.on||mg||paused||c.title<3)return;const n=c.need,h=timeOfDay(),go=a=>{selected=null;careerAct(a)};
+function butlerTick(){const c=career;if(!c?.butler?.on||mg||paused||c.title<3)return;const n=c.need,h=timeOfDay(),el=document.getElementById('info'),
+ // the butler acts in the background: whatever panel you have open stays open and keeps its building
+ go=a=>{const s=selected,sl=selLand,pm=panelMode,open=!el.hidden;selected=null;selLand=null;if(open)el.hidden=true;try{careerAct(a)}finally{selected=s;selLand=sl;panelMode=pm;if(open){el.hidden=false;renderCareerInfo()}}};
  if(n.food<45&&money>=8)return go('eat');if(c.slept!==day&&(n.energy<15||(h>=21||h<6)&&n.energy<85))return go('sleep');
  if((n.hyg??70)<45){if(c.home!=='bench'&&(c.home!=='room'||c.showered!==day))return go('hy_shower');if(money>=2)return go('hy_wc')}
- if(n.hp<40&&money>=15)return go('hy_med');if(n.mood<35)return go('park')}
+ if(n.hp<40&&money>=15)return go('hy_med');// a walk only while it still lifts the mood (twice a day), not every 3 seconds
+ if(n.mood<35&&n.energy>=20&&(c.park?.day!==day||c.park.n<2))return go('park')}
 setInterval(butlerTick,3000);
 HOOK.day.push(()=>{const B=career.butler;if(!B.on)return;if(money<BUTLER_FEE){B.on=false;notify('🤵 Không đủ tiền trả quản gia — dịch vụ tạm dừng');return}money-=BUTLER_FEE});
 HOOK.act.butler=(b,ds,done)=>{const B=career.butler;if(career.title<3)return;B.on=!B.on;return done(B.on?'🤵 Quản gia bắt đầu làm việc':'Đã cho quản gia nghỉ')};
